@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc
+class ComposerStaticInitd6f41fa9d586453c738494ffb3251591
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
@@ -17,6 +17,7 @@ class ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
         'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
+        '2c7f5fe79c17d22a12cd0ce3111e4d87' => __DIR__ . '/../..' . '/app/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -139,7 +140,7 @@ class ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc
         ),
         'Psr\\Log\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/psr/log/src',
         ),
         'Psr\\Http\\Server\\' => 
         array (
@@ -867,9 +868,9 @@ class ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc1227a144d2875d7c4a46b3938fcf7bc::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd6f41fa9d586453c738494ffb3251591::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd6f41fa9d586453c738494ffb3251591::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitd6f41fa9d586453c738494ffb3251591::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -23,15 +23,10 @@ return function (App $app) {
     // });
 
     $app->get('/', function (Request $request, Response $response, $args) {
-        $lista = new Lista($this->connection);
-
-        $args['lista'] = $lista->getLista();
-        
         $view = Twig::fromRequest($request);
-        $view->render($response, 'Comuns/cabecalho.php');
-        $view->render($response, 'Comuns/menu.php');
-        return $view->render($response, 'Admin/listaCategoria.php', $args);
-        //$view->render($response, 'Comuns/rodape.php');
+        $view->render($response, 'Croche/Views/Comuns/menu.php', $args);
+        $view->render($response, 'Croche/Views/Admin/listaCategoria.php', $args);
+        return $view->render($response, 'Croche/Views/Comuns/rodape.php', $args);
     });
 
     $app->group('/users', function (Group $group) {

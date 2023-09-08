@@ -23,12 +23,25 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
 
                 //Configurações do banco de dados
-                'db' => [
+                "db" => [
+                    'driver' => 'mysql',
                     'host' => 'localhost',
-                    'database_name' => 'cafe-control',
-                    'database_user' => 'root',
-                    'database_pass' => '',
-                ]
+                    'username' => 'root',
+                    'database' => 'slim',
+                    'password' => '',
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_unicode_ci',
+                    'flags' => [
+                        // Turn off persistent connections
+                        PDO::ATTR_PERSISTENT => false,
+                        // Enable exceptions
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        // Emulate prepared statements
+                        PDO::ATTR_EMULATE_PREPARES => true,
+                        // Set default fetch mode to array
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                    ],
+                ],
             ]);
         }
     ]);
