@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Application\Settings\SettingsInterface;
 use DI\Container;
 use DI\ContainerBuilder;
-use FTP\Connection;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
@@ -27,14 +26,22 @@ return function (ContainerBuilder $containerBuilder) {
             $logger->pushHandler($handler);
 
             return $logger;
-        }
-    ], 
-    [
-        Connection::class => function (ContainerInterface $c) {
-            $settings = $c->get('settings')['db'];
-            $pdo = new PDO("mysql:host=".$settings['host'].";dbname=".$settings['database_name'], $settings['database_user'], $settings['database_pass']);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $pdo;
-        }
+        },
+
+        PDO::class => function (ContainerInterface $c) {
+
+            $settings = $c->get(SettingsInterface::class);
+
+            $dbSettings = $settings->get('db');
+
+            $host = $dbSettings['host'];
+            $dbname = $dbSettings['database'];
+            $username = $dbSettings['username'];
+            $password = $dbSettings['password'];
+            $charset = $dbSettings['charset'];
+            $flags = $dbSettings['flags'];
+            $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+            return new PDO($dsn, $username, $password);
+        },
     ]);
 };
