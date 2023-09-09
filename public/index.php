@@ -7,10 +7,10 @@ use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
-use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use DI\Bridge\Slim\Bridge as SlimAppFactory;
 
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -20,6 +20,16 @@ spl_autoload_register(function($class){
 		require '../src/Models/'. $class .'.php';
 	}
 });
+
+if (PHP_SAPI == 'cli-server') {
+    // To help the built-in PHP dev server, check if the request was actually for
+    // something which should probably be served as a static file
+    $url  = parse_url($_SERVER['REQUEST_URI']);
+    $file = __DIR__ . $url['path'];
+    if (is_file($file)) {
+        return false;
+    }
+}
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
@@ -44,8 +54,8 @@ $repositories($containerBuilder);
 $container = $containerBuilder->build();
 
 // Instantiate the app
-AppFactory::setContainer($container);
-$app = AppFactory::create();
+$app = SlimAppFactory::create($container);
+
 $callableResolver = $app->getCallableResolver();
 
 //-------------------------------------------------------------

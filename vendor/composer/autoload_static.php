@@ -4,19 +4,19 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd6f41fa9d586453c738494ffb3251591
+class ComposerStaticInit7662859962380f6ef60e0d019442440f
 {
     public static $files = array (
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
-        'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
         '2c7f5fe79c17d22a12cd0ce3111e4d87' => __DIR__ . '/../..' . '/app/helpers.php',
     );
 
@@ -83,6 +83,7 @@ class ComposerStaticInitd6f41fa9d586453c738494ffb3251591
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\Deprecations\\' => 22,
             'DeepCopy\\' => 9,
+            'DI\\Bridge\\Slim\\' => 15,
             'DI\\' => 3,
         ),
         'A' => 
@@ -141,7 +142,7 @@ class ComposerStaticInitd6f41fa9d586453c738494ffb3251591
         ),
         'Psr\\Log\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/src',
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
         'Psr\\Http\\Server\\' => 
         array (
@@ -216,6 +217,10 @@ class ComposerStaticInitd6f41fa9d586453c738494ffb3251591
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'DI\\Bridge\\Slim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-di/slim-bridge/src',
         ),
         'DI\\' => 
         array (
@@ -869,9 +874,9 @@ class ComposerStaticInitd6f41fa9d586453c738494ffb3251591
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd6f41fa9d586453c738494ffb3251591::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd6f41fa9d586453c738494ffb3251591::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd6f41fa9d586453c738494ffb3251591::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7662859962380f6ef60e0d019442440f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7662859962380f6ef60e0d019442440f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7662859962380f6ef60e0d019442440f::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -13,9 +13,9 @@
         <tbody>
             <?php foreach ($data as $blog): ?>
                 <tr>
-                    <td class="col-2"><?= $blog['Categoria'] ?></td>
-                    <td class="col-5"><?= $blog['Descricao'] ?></td>
-                    <td class="col-1"><?= $blog['Status'] == 1 ? "Ativo" : "Inativo" ?></td>
+                    <td class="col-2"><?= $blog['street'] ?></td>
+                    <td class="col-5"><?= $blog['complement'] ?></td>
+                    <td class="col-1"><?= $blog['id'] == 1 ? "Ativo" : "Inativo" ?></td>
                     <td class="col-4">
                     </td>
                 </tr>

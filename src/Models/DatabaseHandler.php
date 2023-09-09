@@ -1,5 +1,6 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Psr7\Stream;
@@ -7,18 +8,14 @@ use Slim\Psr7\Stream;
 class DatabaseHandler {
     private $db;
     private $tableName;
-    private $column1Name;
-    private $column2Name;
 
-    public function __construct(PDO $db, $tableName, $column1Name, $column2Name) {
+    public function __construct(PDO $db, $tableName) {
         $this->db = $db;
         $this->tableName = $tableName;
-        $this->column1Name = $column1Name;
-        $this->column2Name = $column2Name;
     }
 
-    public function findAll(Request $request, Response $response) {
-        $sql = "SELECT * FROM {$this->tableName}";
+    public function findAll(Request $request, Response $response, string $column = '*') {
+        $sql = "SELECT $column FROM {$this->tableName}";
         
         $stmt = $this->db->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,13 +35,12 @@ class DatabaseHandler {
         }
     }
 
-    public function insert(Request $request, Response $response, $args) {
+    public function insert(Request $request, Response $response, $args, string $column) {
         $data = $request->getParsedBody();
-        $sql = "INSERT INTO {$this->tableName} ({$this->column1Name}, {$this->column2Name}) VALUES (:{$this->column1Name}, :{$this->column2Name})";
+        $sql = "INSERT INTO {$this->tableName} ($column) VALUES (:value)";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(":{$this->column1Name}", $data[$this->column1Name]);
-        $stmt->bindParam(":{$this->column2Name}", $data[$this->column2Name]);
+        $stmt->bindParam(':value', $data['value']); // Substitua 'value' pelo nome do campo correspondente
         
         if ($stmt->execute()) {
             return $response->withJson(['message' => 'Registro inserido com sucesso.']);
@@ -53,12 +49,12 @@ class DatabaseHandler {
         }
     }
 
-    public function delete(Request $request, Response $response, $args) {
-        $id = $args['id'];
-        $sql = "DELETE FROM {$this->tableName} WHERE id = :id";
+    public function delete(Request $request, Response $response, $args, string $column) {
+        $value = $args['value'];
+        $sql = "DELETE FROM {$this->tableName} WHERE $column = :value";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':value', $value);
         
         if ($stmt->execute()) {
             return $response->withJson(['message' => 'Registro excluído com sucesso.']);
@@ -67,15 +63,14 @@ class DatabaseHandler {
         }
     }
 
-    public function update(Request $request, Response $response, $args) {
-        $id = $args['id'];
+    public function update(Request $request, Response $response, $args, string $column) {
+        $value = $args['value'];
         $data = $request->getParsedBody();
-        $sql = "UPDATE {$this->tableName} SET {$this->column1Name} = :{$this->column1Name}, {$this->column2Name} = :{$this->column2Name} WHERE id = :id";
+        $sql = "UPDATE {$this->tableName} SET $column = :value WHERE $column = :oldValue";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(":{$this->column1Name}", $data[$this->column1Name]);
-        $stmt->bindParam(":{$this->column2Name}", $data[$this->column2Name]);
+        $stmt->bindParam(':value', $data['newValue']); // Substitua 'newValue' pelo nome do campo correspondente
+        $stmt->bindParam(':oldValue', $value);
         
         if ($stmt->execute()) {
             return $response->withJson(['message' => 'Registro atualizado com sucesso.']);

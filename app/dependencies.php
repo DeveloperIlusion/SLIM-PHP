@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Application\Settings\SettingsInterface;
+use App\Controller\HomeController;
 use DI\Container;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
@@ -44,4 +45,9 @@ return function (ContainerBuilder $containerBuilder) {
             return new PDO($dsn, $username, $password);
         },
     ]);
+
+    // $container['HomeController'] = function($c) {
+    //     $view = $c->get("view"); // retrieve the 'view' from the container
+    //     return new HomeController($view);
+    // };
 };

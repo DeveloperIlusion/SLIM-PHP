@@ -27,7 +27,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'driver' => 'mysql',
                     'host' => 'localhost',
                     'username' => 'root',
-                    'database' => 'croche',
+                    'database' => 'cafe-control',
                     'password' => '',
                     'charset' => 'utf8mb4',
                     'collation' => 'utf8mb4_unicode_ci',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
+use App\Controller\HomeController;
 use DI\Container;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -23,7 +24,9 @@ return function (App $app) {
     //     return $response;
     // });
 
-    $app->get('/', function (Request $request, Response $response, $args) {
+    $app->get('/', '\App\Controller\HomeController:home');
+
+    //$app->get('/', function (Request $request, Response $response, $args) {
         // $view = Twig::fromRequest($request);
         // $view->render($response, 'Croche/Views/Comuns/menu.php', $args);
         // $view->render($response, 'Croche/Views/Admin/listaCategoria.php', $args);
@@ -35,19 +38,19 @@ return function (App $app) {
         // $sth->execute();
         // $dados = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        $db = $this->get(PDO::class);
-        $dbHandler = new DatabaseHandler($db, 'categoria', 'Categoria', 'Descricao');
-        $resposta = $dbHandler->findAll($request, $response);
-        $jsonContent = (string) $resposta->getBody();
-        $data = json_decode($jsonContent, true);
+        // $db = $this->get(PDO::class);
+        // $dbHandler = new DatabaseHandler($db, 'address', 'street', 'number');
+        // $resposta = $dbHandler->findAll($request, $response);
+        // $jsonContent = (string) $resposta->getBody();
+        // $data = json_decode($jsonContent, true);
 
-        $view = new PhpRenderer("../templates/Croche/Views/");
-        $view->render($response, "Comuns/cabecalho.php");
-        $view->render($response, "Comuns/menu.php");
-        $view->render($response, "Admin/listaCategoria.php", $data);
-        $view->render($response, "Comuns/rodape.php");
-        return $view->render($response, "Comuns/rodape.php");;
-    });
+        // $view = new PhpRenderer("../templates/Croche/Views/");
+        // $view->render($response, "Comuns/cabecalho.php");
+        // $view->render($response, "Comuns/menu.php");
+        // $view->render($response, "Admin/listaCategoria.php", $data);
+        // $view->render($response, "Comuns/rodape.php");
+        // return $view->render($response, "Comuns/rodape.php");
+    //});
 
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);
