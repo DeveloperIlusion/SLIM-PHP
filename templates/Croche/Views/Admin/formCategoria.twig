@@ -1,15 +1,15 @@
-<?php
+{# formCategoria.twig #}
 
-use App\Library\Formulario;
+{% extends "/Layouts/layout.twig" %}
 
-    echo $this->loadView("Comuns/cabecalho");
-    echo $this->loadView("Comuns/menu");
-    echo  Formulario::titulo('Categoria', false, true); 
-?>
+{% block content %}
 
 <div class="container mt-5 mb-5">
-    <form method="POST" action="<?= baseUrl() ?>Categoria/<?= $this->getAcao() ?>" enctype="multipart/form-data">
+    {{ acaoView | raw }}
+    <form method="POST" enctype="multipart/form-data" action={{ path }}>
         <div class="row mx-auto my-auto text-left mt-5 justify-content-center">
+            <input type="hidden" name="id" id="id" value={{ data['id'] }} >
+
             <div class="col-md-6">
                 <label for="Categoria" class="form-label">Categoria</label>
                 <input 
@@ -19,17 +19,17 @@ use App\Library\Formulario;
                     name="Categoria" 
                     aria-describedby="Categoria"
                     maxlength="100"
-                    value="<?= setValor('Categoria') ?>" 
                     required
+                    value={{ dataInDatabase.Categoria }}
                 >
             </div>
 
             <div class="col-md-6">
                 <label for="Status">Status</label>
                 <select name="Status" id="Status" class="form-control" required>
-                    <option value=""  <?= setValor('Status') == ""  ? "SELECTED": "" ?>>...</option>
-                    <option value="1" <?= setValor('Status') == "1" ? "SELECTED": "" ?>>Ativo</option>
-                    <option value="2" <?= setValor('Status') == "2" ? "SELECTED": "" ?>>Inativo</option>
+                    <option value=""  {{ dataInDatabase.Status == ""  ? "SELECTED": "" }}>...</option>
+                    <option value="1" {{ dataInDatabase.Status == "1"  ? "SELECTED": "" }}>Ativo</option>
+                    <option value="2" {{ dataInDatabase.Status == "2"  ? "SELECTED": "" }}>Inativo</option>
                 </select>
             </div>
 
@@ -42,18 +42,16 @@ use App\Library\Formulario;
                     name="Descricao" 
                     aria-describedby="Descricao"
                     maxlength="300"
-                    required
-                ><?= setValor('Descricao') ?></textarea>
+                    required>{{ dataInDatabase.Descricao }}</textarea>
             </div>
-
-            <input type="hidden" name="id" id="id" value="<?= setValor('id') ?>">
         </div>
-        <?php if ($this->getAcao() != 'view'): ?>
-            <div class="row my-auto mx-auto justify-content-center p-5">
+        <div class="row my-auto mx-auto justify-content-center p-5">
+            {{ returnButton | raw }}
+            {% if acao != 'visualize' %}
                 <button type="submit" class="btn btn-outline-danger">Gravar</button>
-            </div>
-        <?php endif; ?>
+            {% endif %}
+        </div>
     </form>
 </div>
 
-<?= $this->loadView("Comuns/rodape") ?>
+{% endblock content %}

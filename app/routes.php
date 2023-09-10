@@ -14,46 +14,23 @@ use Slim\Views\Twig;
 use Slim\Views\PhpRenderer;
 
 return function (App $app) {
-    // $app->options('/{routes:.*}', function (Request $request, Response $response) {
-    //     // CORS Pre-Flight OPTIONS Request Handler
-    //     return $response;
-    // });
-
-    // $app->get('/', function (Request $request, Response $response) {
-    //     $response->getBody()->write('Hello world!');
-    //     return $response;
-    // });
-
-    $app->get('/', '\App\Controller\HomeController:home');
-
-    //$app->get('/', function (Request $request, Response $response, $args) {
-        // $view = Twig::fromRequest($request);
-        // $view->render($response, 'Croche/Views/Comuns/menu.php', $args);
-        // $view->render($response, 'Croche/Views/Admin/listaCategoria.php', $args);
-        // return $view->render($response, 'Croche/Views/Comuns/rodape.php', $args);
-
-
-        // $db = $this->get(PDO::class);
-        // $sth = $db->prepare("SELECT * FROM categoria");
-        // $sth->execute();
-        // $dados = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-        // $db = $this->get(PDO::class);
-        // $dbHandler = new DatabaseHandler($db, 'address', 'street', 'number');
-        // $resposta = $dbHandler->findAll($request, $response);
-        // $jsonContent = (string) $resposta->getBody();
-        // $data = json_decode($jsonContent, true);
-
-        // $view = new PhpRenderer("../templates/Croche/Views/");
-        // $view->render($response, "Comuns/cabecalho.php");
-        // $view->render($response, "Comuns/menu.php");
-        // $view->render($response, "Admin/listaCategoria.php", $data);
-        // $view->render($response, "Comuns/rodape.php");
-        // return $view->render($response, "Comuns/rodape.php");
-    //});
-
-    $app->group('/users', function (Group $group) {
-        $group->get('', ListUsersAction::class);
-        $group->get('/{id}', ViewUserAction::class);
+    $app->options('/{routes:.*}', function (Request $request, Response $response) {
+        $response->getBody()->write("Página Inexistente.");
+        return $response;
     });
+
+    $app->get('/', '\App\Controller\HomeController:categoryList');
+    $app->post('/', '\App\Controller\HomeController:categoryList');
+
+    $app->get('/insert', '\App\Controller\HomeController:categoryForm');
+    $app->post('/insert', '\App\Controller\HomeController:categoryForm');
+
+    $app->get('/visualize/{id}', '\App\Controller\HomeController:categoryForm');
+    $app->post('/visualize/{id}', '\App\Controller\HomeController:categoryForm');
+
+    $app->get('/update/{id}', '\App\Controller\HomeController:categoryForm');
+    $app->post('/update/{id}', '\App\Controller\HomeController:categoryForm');
+    
+    $app->get('/delete/{id}', '\App\Controller\HomeController:categoryForm');
+    $app->post('/delete/{id}', '\App\Controller\HomeController:categoryForm');
 };

@@ -1,81 +1,126 @@
 <?php
-
-use Psr\Container\ContainerInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Slim\Psr7\Stream;
 
 class DatabaseHandler {
     private $db;
-    private $tableName;
 
-    public function __construct(PDO $db, $tableName) {
+    public function __construct(PDO $db) {
         $this->db = $db;
-        $this->tableName = $tableName;
     }
 
-    public function findAll(Request $request, Response $response, string $column = '*') {
-        $sql = "SELECT $column FROM {$this->tableName}";
-        
+    public function findAll(Request $request, Response $response, string $table = "", string $column = '*') {
+        $sql = "SELECT $column FROM {$table}";
+
         $stmt = $this->db->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if ($result) {
-            $response->getBody()->write(json_encode($result));
+            $response->getBody()->write("<div class='d-none'>" . json_encode($result) . "</div>");
 
             return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
         } else {
             $response->getBody()->write(json_encode(['message' => 'Nenhum registro encontrado.']));
 
             return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
         }
     }
 
-    public function insert(Request $request, Response $response, $args, string $column) {
-        $data = $request->getParsedBody();
-        $sql = "INSERT INTO {$this->tableName} ($column) VALUES (:value)";
+    public function find(Request $request, Response $response, string $table, string $terms, string $column = '*') {
+        $sql = "SELECT $column FROM {$table} WHERE $terms";
+
         
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':value', $data['value']); // Substitua 'value' pelo nome do campo correspondente
-        
-        if ($stmt->execute()) {
-            return $response->withJson(['message' => 'Registro inserido com sucesso.']);
+        $stmt = $this->db->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $response->getBody()->write("<div class='d-none'>" . json_encode($result) . "</div>");
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
         } else {
-            return $response->withJson(['error' => 'Erro ao inserir o registro.'], 500);
+            $response->getBody()->write(json_encode(['message' => 'Nenhum registro encontrado.']));
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
         }
     }
 
-    public function delete(Request $request, Response $response, $args, string $column) {
-        $value = $args['value'];
-        $sql = "DELETE FROM {$this->tableName} WHERE $column = :value";
-        
+    public function insert(Request $request, Response $response, string $table, array $data) {
+        $data = array_filter($data);
+        $values = "";
+        $columns = "";
+        $params = "";
+            foreach ($data as $index => $value) {
+                if (!empty($params)) {
+                    $columns = $columns . ", ";
+                    $params = $params . ", ";
+                    $values = $values . ", ";
+                }
+                $columns = $columns . $index;
+                $params = $params . ":" . $index;
+                $values = $values . $value;
+                
+            }
+        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$params})";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':value', $value);
-        
+        foreach ($data as $column => &$receive) {
+            $stmt->bindParam(":{$column}", $receive);
+        }
         if ($stmt->execute()) {
-            return $response->withJson(['message' => 'Registro excluído com sucesso.']);
+            $mensagem = "Registro inserido com sucesso.";
+            return $response->getBody()->write("<div class='d-none'> $mensagem </div>");
         } else {
-            return $response->withJson(['error' => 'Erro ao excluir o registro.'], 500);
+            $mensagem = 'Erro ao inserir o registro.';
+            return $response->getBody()->write("<div class='d-none'> $mensagem </div>");
         }
     }
 
-    public function update(Request $request, Response $response, $args, string $column) {
-        $value = $args['value'];
-        $data = $request->getParsedBody();
-        $sql = "UPDATE {$this->tableName} SET $column = :value WHERE $column = :oldValue";
-        
+    public function delete(Request $request, Response $response, string $table, string $id) {
+        $value = $request->getAttribute('value');
+        $sql = "DELETE FROM {$table} WHERE id = $id";
+
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':value', $data['newValue']); // Substitua 'newValue' pelo nome do campo correspondente
-        $stmt->bindParam(':oldValue', $value);
-        
+
         if ($stmt->execute()) {
-            return $response->withJson(['message' => 'Registro atualizado com sucesso.']);
+            $mensagem = "Registro excluído com sucesso.";
+            return $response->getBody()->write("<div class='d-none'> $mensagem </div>");
         } else {
-            return $response->withJson(['error' => 'Erro ao atualizar o registro.'], 500);
+            $mensagem = 'Erro ao excluir o registro.';
+            return $response->getBody()->write("<div class='d-none'> $mensagem </div>");
         }
     }
+
+    public function update(Request $request, Response $response, string $table, array $data, string $id) {
+        $data = array_filter($data);
+        $newData = "";
+        foreach ($data as $index => $value) {
+            if (!empty($newData)) {
+                $newData .= ", ";
+            }
+            $newData .= "$index = :$index";
+        }
+    
+        $sql = "UPDATE $table SET $newData WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+    
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        foreach ($data as $index => &$value) {
+            $stmt->bindParam(":$index", $value);
+        }
+    
+        if ($stmt->execute()) {
+            $mensagem = "Registro atualizado com sucesso.";
+            return $response->getBody()->write("<div class='d-none'> $mensagem </div>");
+        } else {
+            $mensagem = 'Erro ao atualizar o registro.';
+            return $response->getBody()->write("<div class='d-none'> $mensagem </div>");
+        }
+    }    
 }

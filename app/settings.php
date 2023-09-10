@@ -27,7 +27,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'driver' => 'mysql',
                     'host' => 'localhost',
                     'username' => 'root',
-                    'database' => 'cafe-control',
+                    'database' => 'croche',
                     'password' => '',
                     'charset' => 'utf8mb4',
                     'collation' => 'utf8mb4_unicode_ci',
@@ -41,6 +41,12 @@ return function (ContainerBuilder $containerBuilder) {
                         // Set default fetch mode to array
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                     ],
+                ],
+
+                'twig' => [
+                    'path' => base_url() . '/templates/Croche',
+                    'cache_enabled' => true, // ou false para desenvolvimento
+                    'cache_path' => base_url() . '/templates/Cache',
                 ],
             ]);
         }
